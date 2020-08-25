@@ -207,8 +207,9 @@ legend span{
 /* COLORES DE LA NOTIFICACION */
 .correcto{
     background-color: #00dd33;
+    color: #b8ffc9;
 }
 .error{
     background-color: rgb(194, 0, 0);
-    color: white;
+    color: rgb(255, 177, 177);
 }

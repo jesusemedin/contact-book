@@ -1,5 +1,6 @@
 // QUERY SELECTOR ES LA NUEVA FORMA DE SELECIONAR ELEMENTOS POCO A POCO SE HA SUSTITUIDO POR GET ELEMENTS BY
-const formularioContactos = document.querySelector('#contacto');
+const formularioContactos = document.querySelector('#contacto'),
+      listadoContactos = document.querySelector('#listado-contactos tbody');
 
 //JUAN PABLO DECLARA UNA FUNCION PARA NO TENER LOS EVENTLISTENERS AFUERA
 eventListeners();
@@ -30,7 +31,7 @@ function leerFormulario(event){
         infoContacto.append('accion', accion);
 
         // EL SPREAD OPERATOR PERMITE CREAR UNA COPIA DEL OBJETO
-        console.log(...infoContacto)
+        // console.log(...infoContacto)
 
         if(accion === 'crear'){
             // Crearemos un nuevo contacto
@@ -56,9 +57,58 @@ function insertarDB(datos){
     // PASAR LOS DATOS
     xhr.onload = function() {
         if(this.status === 200){
-        // RESPONSE TEXT RETORNA TEZTO EN FORMATO STRING
+        // RESPONSETEXT RETORNA TEXTO EN FORMATO STRING
         // JSON.PARSE CONVERTIRA ESE STRING EN JSON EN EL QUE PODEMOS MANIPULAR Y USAR LOS VALORES INDIVIDUALMENTE
-            console.log(xhr.responseText);
+            console.log(JSON.parse(xhr.responseText));
+        // LEEMOS LA RESPUESTA DE PHP
+        const respuesta = JSON.parse(xhr.responseText);
+        // INSERTANDO UNA NUEVA RESPUESTA A LA TABLLA
+        const nuevoContacto = document.createElement('tr');
+        nuevoContacto.innerHTML = `
+            <td>${respuesta.datos.nombre}</td>
+            <td>${respuesta.datos.empresa}</td>
+            <td>${respuesta.datos.telefono}</td>
+        `;
+
+        // CREANDO EL CONTENEDOR PARA LOS BOTONES
+        const contenedorAcciones = document.createElement('td');
+        // CREAR EL ICONO DE EDITAR
+        const iconoEditar = document.createElement('i');
+        iconoEditar.classList.add('fas', 'fa-edit')
+        // CREANDO EL ENLACE PARA EDITAR
+        const btnEditar = document.createElement('a');
+        // el appendchild incluira como hijo al i (icono)
+        btnEditar.appendChild(iconoEditar);
+        btnEditar.href = `editar.php?id=${respuesta.datos.id_insertado}`;
+        btnEditar.classList.add('btn', 'btn-editar');
+
+        // AGREGAMOS EL BOTON DE EDITAR AL PADRE
+        contenedorAcciones.appendChild(btnEditar);
+
+
+        // CREANDO EL ICONO DE ELIMINAR
+        const iconoEliminar = document.createElement('i');
+        iconoEliminar.classList.add('fas', 'fa-user-minus');
+
+        // CREAR EL BOTON DE ELIMINAR
+        const btnEliminar = document.createElement('buttom');
+        btnEliminar.appendChild(iconoEliminar);
+        btnEliminar.setAttribute('data_id', respuesta.datos.id_insertado);
+        btnEliminar.classList.add('btn', 'btn-borrar');
+        // agregando el boton de eliminar al padre
+        contenedorAcciones.appendChild(btnEliminar);
+        // agregandolo al tr
+        nuevoContacto.appendChild(contenedorAcciones);
+        // agregarlo con los contactos
+        listadoContactos.appendChild(nuevoContacto);
+
+
+
+        // RESETEANDO EL FORM
+        document.querySelector('form').reset();
+
+        // MOSTRANDO LA NOTIFICACION
+        mostrarNotificacion('Contacto creado correctamente', 'correcto')
         }
     }
     // ENVIAR LOS DATOS
