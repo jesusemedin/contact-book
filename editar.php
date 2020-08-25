@@ -1,4 +1,15 @@
-<?php include 'inc/layout/header.php'; ?>
+<?php 
+include 'inc/layout/header.php'; 
+include 'inc/funciones/funciones.php';
+$id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+if(!$id){
+    die('No es valido');
+}
+
+$resultado = obtenerContacto($id);
+$contacto = $resultado->fetch_assoc();
+
+?>
 <div class="contenedor-barra">
     <div class="contenedor barra">
         <a href="index.php" class="btn volver">Volver</a>

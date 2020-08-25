@@ -1,4 +1,7 @@
-<?php include 'inc/layout/header.php'; ?>
+<?php 
+    include 'inc/funciones/funciones.php';
+    include 'inc/layout/header.php'; 
+?>
 <div class="contenedor-barra">
     <h1>Agenda de contacto</h1>
 </div>
@@ -16,7 +19,7 @@
         <h2>Contactos</h2>
         <input type="text" id="buscar" class="buscador sombra" placeholder="Buscar contacto...">
     
-        <p class="total-contactos"><span>3</span> Contactos</p>
+        <p class="total-contactos"><span></span> Contactos</p>
 
         <div class="contenedor-tabla">
             <table id="listado-contactos" class="listado-contactos">
@@ -29,33 +32,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Jesus Medina</td>
-                        <td>American Airlines</td>
-                        <td>04121934690</td>
-                        <td>
-                            <a class="btn-editar btn" href="editar.php?id=1"><i class="fas fa-edit"></i></a>
-                            <button class="btn-borrar btn" data-id="1" type="button"><i class="fas fa-user-minus"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jesus Medina</td>
-                        <td>American Airlines</td>
-                        <td>04121934690</td>
-                        <td>
-                            <a class="btn-editar btn" href="editar.php?id=1"><i class="fas fa-edit"></i></a>
-                            <button class="btn-borrar btn" data-id="1" type="button"><i class="fas fa-user-minus"></i></button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jesus Medina</td>
-                        <td>American Airlines</td>
-                        <td>04121934690</td>
-                        <td>
-                            <a class="btn-editar btn" href="editar.php?id=1"><i class="fas fa-edit"></i></a>
-                            <button class="btn-borrar btn" data-id="1" type="button"><i class="fas fa-user-minus"></i></button>
-                        </td>
-                    </tr>
+                    <?php $contactos = obtenerContactos(); 
+                    // LA FORMA PARA REVISAR SI HAY REGISTRO ES CON NUM_ROWS
+                        if($contactos->num_rows){ 
+                            
+                        foreach($contactos as $contacto) {?>
+                        <tr>
+                            <td><?php echo $contacto['nombre']; ?></td>
+                            <td><?php echo $contacto['empresa']; ?></td>
+                            <td><?php echo $contacto['telefono']; ?></td>
+                            <td>
+                                <a class="btn-editar btn" href="editar.php?id=<?php echo $contacto['id']; ?>"><i class="fas fa-edit"></i></a>
+                                <button class="btn-borrar btn" data-id="<?php echo $contacto['id']; ?>" type="button"><i class="fas fa-user-minus"></i></button>
+                            </td>
+                        </tr>
+                     <?php } 
+                    } ?>
                 </tbody>
             </table>
         </div>
